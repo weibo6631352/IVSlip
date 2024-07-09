@@ -144,6 +144,12 @@ class InfusionForm(QWidget):
         line_edit = QLineEdit()
         line_edit.setCompleter(self.completer)
         line_edit.setAlignment(Qt.AlignCenter)
+        # 去掉边框
+        line_edit.setStyleSheet("border:none;")
+        # 设置14号字体
+        font = QFont()
+        font.setPointSize(14)
+        line_edit.setFont(font)
         table.setCellWidget(row, col, line_edit)
 
     def addMoreRows(self):
