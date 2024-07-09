@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, \
-    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter
+    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter, QRadioButton, QButtonGroup
 from PyQt5.QtGui import QFont, QIntValidator
 from PyQt5.QtCore import Qt
 import datetime
@@ -29,11 +29,18 @@ class InfusionForm(QWidget):
         self.nameEdit = QLineEdit()
         self.nameEdit.setFixedHeight(40)
         self.nameEdit.setFont(font)
+
         genderLabel = QLabel('性别：')
         genderLabel.setFont(font)
-        self.genderEdit = QLineEdit()
-        self.genderEdit.setFixedHeight(40)
-        self.genderEdit.setFont(font)
+
+        self.genderGroup = QButtonGroup(self)
+        self.maleRadio = QRadioButton('男')
+        self.maleRadio.setFont(font)
+        self.femaleRadio = QRadioButton('女')
+        self.femaleRadio.setFont(font)
+        self.genderGroup.addButton(self.maleRadio)
+        self.genderGroup.addButton(self.femaleRadio)
+
         ageLabel = QLabel('年龄：')
         ageLabel.setFont(font)
         self.ageEdit = QLineEdit()
@@ -44,7 +51,8 @@ class InfusionForm(QWidget):
         infoLayout.addWidget(nameLabel)
         infoLayout.addWidget(self.nameEdit)
         infoLayout.addWidget(genderLabel)
-        infoLayout.addWidget(self.genderEdit)
+        infoLayout.addWidget(self.maleRadio)
+        infoLayout.addWidget(self.femaleRadio)
         infoLayout.addWidget(ageLabel)
         infoLayout.addWidget(self.ageEdit)
 
@@ -170,7 +178,7 @@ class InfusionForm(QWidget):
 
     def printForm(self):
         name = self.nameEdit.text()
-        gender = self.genderEdit.text()
+        gender = '男' if self.maleRadio.isChecked() else '女'
         age = self.ageEdit.text()
         drugs = [[] for _ in range(4)]
         quantities = [[] for _ in range(4)]
@@ -205,7 +213,10 @@ class InfusionForm(QWidget):
 
     def resetForm(self):
         self.nameEdit.clear()
-        self.genderEdit.clear()
+        self.genderGroup.setExclusive(False)
+        self.maleRadio.setChecked(False)
+        self.femaleRadio.setChecked(False)
+        self.genderGroup.setExclusive(True)
         self.ageEdit.clear()
         for table in self.tables:
             table.clearContents()
@@ -220,7 +231,10 @@ class InfusionForm(QWidget):
         if filepath:
             name, gender, age, drugs, quantities = load_from_excel(filepath)
             self.nameEdit.setText(name)
-            self.genderEdit.setText(gender)
+            if gender == '男':
+                self.maleRadio.setChecked(True)
+            else:
+                self.femaleRadio.setChecked(True)
             self.ageEdit.setText(age)
             # 将 drugs 和 quantities 分成 4 组填入每个表格
             for i, table in enumerate(self.tables):
@@ -241,3 +255,4 @@ class InfusionForm(QWidget):
                         item = QTableWidgetItem('1')
                         item.setTextAlignment(Qt.AlignCenter)
                         table.setItem(row, 1, item)
+
