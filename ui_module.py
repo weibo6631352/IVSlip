@@ -36,6 +36,7 @@ class InfusionForm(QWidget):
         self.genderGroup = QButtonGroup(self)
         self.maleRadio = QRadioButton('男')
         self.maleRadio.setFont(font)
+        self.maleRadio.setChecked(True)
         self.femaleRadio = QRadioButton('女')
         self.femaleRadio.setFont(font)
         self.genderGroup.addButton(self.maleRadio)
@@ -214,7 +215,7 @@ class InfusionForm(QWidget):
     def resetForm(self):
         self.nameEdit.clear()
         self.genderGroup.setExclusive(False)
-        self.maleRadio.setChecked(False)
+        self.maleRadio.setChecked(True)
         self.femaleRadio.setChecked(False)
         self.genderGroup.setExclusive(True)
         self.ageEdit.clear()
