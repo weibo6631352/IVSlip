@@ -32,8 +32,11 @@ def save_to_excel(filepath, name, gender, age, drugs, quantities, date_str):
 
     print_sheet['E15'] = date_str
 
+
     for i in range(4):
-        details = ';'.join([f"{drugs[i][j]}*{quantities[i][j]}" for j in range(len(drugs[i]))])
+        details = ';'.join(
+            [f"{drugs[i][j]}*{quantities[i][j] if quantities[i][j] else '1'}" for j in range(len(drugs[i])) if drugs[i][j]]
+        )
         if i == 0:
             print_sheet['A5'] = details
         elif i == 1:
