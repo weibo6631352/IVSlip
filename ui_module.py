@@ -1,10 +1,13 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, \
-    QTableWidget, QTableWidgetItem, QGroupBox
+    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter
 from PyQt5.QtGui import QFont, QIntValidator
 from PyQt5.QtCore import Qt
 import datetime
 from excel_module import save_to_excel, load_from_excel
 import win32com.client as win32
+import json
+
+from suggestion_module import load_suggestions
 
 
 class InfusionForm(QWidget):
@@ -50,6 +53,8 @@ class InfusionForm(QWidget):
         # 创建四联
         self.tables = []
         groupBoxLayout = QHBoxLayout()
+        self.suggestions = load_suggestions()
+        self.completer = QCompleter(self.suggestions)
         for i in range(4):
             groupBox = QGroupBox(f'第{i + 1}联')
             groupBox.setFont(font)
@@ -76,6 +81,7 @@ class InfusionForm(QWidget):
                 item = QTableWidgetItem('1')
                 item.setTextAlignment(Qt.AlignCenter)
                 table.setItem(row, 1, item)
+                self.set_item_completer(table, row, 0)
 
             table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
             table.verticalHeader().setDefaultAlignment(Qt.AlignCenter)
@@ -134,6 +140,11 @@ class InfusionForm(QWidget):
         self.resize(1440, 860)
         self.show()
 
+    def set_item_completer(self, table, row, col):
+        line_edit = QLineEdit()
+        line_edit.setCompleter(self.completer)
+        table.setCellWidget(row, col, line_edit)
+
     def addMoreRows(self):
         for table in self.tables:
             currentRowCount = table.rowCount()
@@ -142,6 +153,7 @@ class InfusionForm(QWidget):
                 item = QTableWidgetItem('1')
                 item.setTextAlignment(Qt.AlignCenter)
                 table.setItem(row, 1, item)
+                self.set_item_completer(table, row, 0)
 
     def removeRows(self):
         for table in self.tables:
@@ -158,7 +170,7 @@ class InfusionForm(QWidget):
 
         for i, table in enumerate(self.tables):
             for row in range(table.rowCount()):
-                drugItem = table.item(row, 0)
+                drugItem = table.cellWidget(row, 0)
                 quantityItem = table.item(row, 1)
                 if drugItem and quantityItem:
                     drugs[i].append(drugItem.text())
@@ -194,6 +206,7 @@ class InfusionForm(QWidget):
                 item = QTableWidgetItem('1')
                 item.setTextAlignment(Qt.AlignCenter)
                 table.setItem(row, 1, item)
+                self.set_item_completer(table, row, 0)
 
     def importForm(self):
         filepath, _ = QFileDialog.getOpenFileName(self, "选择Excel文件", "", "Excel Files (*.xlsx)")
@@ -208,8 +221,8 @@ class InfusionForm(QWidget):
                 group_quantities = quantities[i]
                 for row in range(table.rowCount()):
                     if row < len(group_drugs):
-                        table.setItem(row, 0, QTableWidgetItem(group_drugs[row]))
+                        table.cellWidget(row, 0).setText(group_drugs[row])
                         table.setItem(row, 1, QTableWidgetItem(group_quantities[row]))
                     else:
-                        table.setItem(row, 0, QTableWidgetItem(''))
+                        table.cellWidget(row, 0).setText('')
                         table.setItem(row, 1, QTableWidgetItem('1'))

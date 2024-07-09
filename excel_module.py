@@ -76,13 +76,11 @@ def load_from_excel(filepath):
     for i in range(4):
         col_start = 2 + i * 3  # 每联开始的列，间隔3列
         row = 7
-        while True:
+        for _ in range(50):
             drug = data_sheet.cell(row=row, column=col_start).value
             quantity = data_sheet.cell(row=row, column=col_start + 1).value
             if drug:
                 drugs[i].append(drug)
                 quantities[i].append(quantity)
-                row += 1
-            else:
-                break
+            row += 1
     return name, gender, age, drugs, quantities
