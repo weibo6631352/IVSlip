@@ -216,7 +216,7 @@ class InfusionForm(QWidget):
                 self.set_item_completer(table, row, 0)
 
     def importForm(self):
-        filepath, _ = QFileDialog.getOpenFileName(self, "选择Excel文件", "", "Excel Files (*.xlsx)")
+        filepath, _ = QFileDialog.getOpenFileName(self, "选择Excel文件", "d:/输液单/", "Excel Files (*.xlsx)")
         if filepath:
             name, gender, age, drugs, quantities = load_from_excel(filepath)
             self.nameEdit.setText(name)
