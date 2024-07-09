@@ -143,6 +143,7 @@ class InfusionForm(QWidget):
     def set_item_completer(self, table, row, col):
         line_edit = QLineEdit()
         line_edit.setCompleter(self.completer)
+        line_edit.setAlignment(Qt.AlignCenter)
         table.setCellWidget(row, col, line_edit)
 
     def addMoreRows(self):
@@ -221,8 +222,16 @@ class InfusionForm(QWidget):
                 group_quantities = quantities[i]
                 for row in range(table.rowCount()):
                     if row < len(group_drugs):
-                        table.cellWidget(row, 0).setText(group_drugs[row])
-                        table.setItem(row, 1, QTableWidgetItem(group_quantities[row]))
+                        line_edit = table.cellWidget(row, 0)
+                        line_edit.setText(group_drugs[row])
+                        line_edit.setAlignment(Qt.AlignCenter)
+                        item = QTableWidgetItem(group_quantities[row])
+                        item.setTextAlignment(Qt.AlignCenter)
+                        table.setItem(row, 1, item)
                     else:
-                        table.cellWidget(row, 0).setText('')
-                        table.setItem(row, 1, QTableWidgetItem('1'))
+                        line_edit = table.cellWidget(row, 0)
+                        line_edit.setText('')
+                        line_edit.setAlignment(Qt.AlignCenter)
+                        item = QTableWidgetItem('1')
+                        item.setTextAlignment(Qt.AlignCenter)
+                        table.setItem(row, 1, item)
