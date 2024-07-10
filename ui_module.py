@@ -84,6 +84,8 @@ class InfusionForm(QWidget):
 
             f.setPointSize(14)
             table.setFont(f)
+            # 行表头隐藏
+            table.verticalHeader().hide()
 
             # 默认数量列为1，内容居中
             for row in range(table.rowCount()):
