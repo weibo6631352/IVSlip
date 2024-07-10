@@ -183,11 +183,13 @@ class InfusionForm(QWidget):
                 if drugItem:
                     drugs[i].append(drugItem.text())
 
-        date_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        nowtime = datetime.datetime.now()
+        date_str = nowtime.strftime("%Y-%m-%d %H:%M:%S")
 
         # 存储Excel文件
-        timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filepath = f"d:/输液单/{datetime.datetime.now().strftime('%Y-%m')}/{timestamp}_{name}.xlsx"
+
+        timestamp = nowtime.strftime("%Y-%m-%d_%H-%M-%S")
+        filepath = f"d:/输液单/{nowtime.strftime('%Y')}/{nowtime.strftime('%m')}/{nowtime.strftime('%d')}/{timestamp}_{name}.xlsx"
         save_to_excel(filepath, name, gender, age, drugs, date_str)
 
         # 打印Excel中的“打印页”
