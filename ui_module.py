@@ -58,7 +58,9 @@ class InfusionForm(QWidget):
         self.tables = []
         groupBoxLayout = QHBoxLayout()
         self.suggestions = load_suggestions()
-        self.completer = QCompleter(self.suggestions)
+        self.completer = QCompleter(self.suggestions, self)
+        self.completer.setFilterMode(Qt.MatchContains)  # 设置过滤模式为包含匹配
+        self.completer.setCaseSensitivity(Qt.CaseInsensitive)  # 设置不区分大小写
         for i in range(4):
             groupBox = QGroupBox(f'第{i + 1}联')
             groupBox.setFont(font)
