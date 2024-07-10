@@ -193,12 +193,25 @@ class InfusionForm(QWidget):
         # 打印Excel中的“打印页”
         self.print_excel(filepath)
 
+
+    '''
+    xl纸10x14	16	10 英寸x 14 英寸
+    xl纸11x17	17	11 英寸x 17 英寸
+    xl论文A3	8	A3 （297 毫米 x 420 毫米）
+    xlPaperA4 （英语）	9	A4 （210 毫米 x 297 毫米）
+    xlPaperA4小	10	A4 小尺寸 （210 mm x 297 mm）
+    xlPaperA5 （英语）	11	A5 （148 毫米 x 210 毫米）
+    xlPaperB4 （英语）	12	B4 （250 毫米 x 354 毫米）
+    xlPaperB5 （英语）	13	A5 （148 毫米 x 210 毫米）
+    '''
     def print_excel(self, filepath):
         excel = win32.Dispatch('Excel.Application')
         excel.Visible = False
         workbook = excel.Workbooks.Open(filepath)
         sheet = workbook.Sheets('打印页')
-        sheet.PageSetup.PaperSize = 9  # A5
+        sheet.PageSetup.PaperSize = 11  # A5
+		
+        # sheet.PageSetup.Orientation = 2  # 1 - Portrait, 2 - Landscape
         sheet.PrintOut()
         workbook.Close(False)
         excel.Quit()
