@@ -20,7 +20,17 @@ class SingleInstanceApp(QApplication):
         try:
             portalocker.lock(self.lock_file, portalocker.LOCK_EX | portalocker.LOCK_NB)
         except portalocker.LockException:
+            self.show_existing_instance()
             sys.exit("另一个实例已经在运行。")
+
+    def show_existing_instance(self):
+        # 显示信息框，通知用户已有实例在运行
+        msg_box = QMessageBox()
+        msg_box.setIcon(QMessageBox.Information)
+        msg_box.setText("另一个实例已经在运行。")
+        msg_box.setInformativeText("点击托盘图标将已有实例显示到前台。")
+        msg_box.setWindowTitle("实例已在运行")
+        msg_box.exec_()
 
 
 def main():
