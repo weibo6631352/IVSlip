@@ -151,7 +151,7 @@ class InfusionForm(QWidget):
 
         self.setLayout(self.layout)
         self.setWindowTitle('史中英诊所输液管理系统')
-        self.resize(1440, 860)
+        self.resize(1440, 900)
         self.show()
 
     def set_item_completer(self, table, row, col):
