@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, \
-    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter, QRadioButton, QButtonGroup
+    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter, QRadioButton, QButtonGroup, QMessageBox
 from PyQt5.QtGui import QFont, QIntValidator
 from PyQt5.QtCore import Qt
 import datetime
@@ -214,10 +214,15 @@ class InfusionForm(QWidget):
         sheet.PageSetup.TopMargin = 0.5
         sheet.PageSetup.BottomMargin = 0.5
 
-        # sheet.PageSetup.Orientation = 2  # 1 - Portrait, 2 - Landscape
-        sheet.PrintOut()
-        workbook.Close(False)
-        excel.Quit()
+        # Try to catch and handle potential errors in the print process
+        try:
+            sheet.PrintOut()
+        except Exception as e:
+            QMessageBox.critical(self, "打印错误", f"打印时发生错误: {e}")
+            print(f"An error occurred: {e}")
+        finally:
+            workbook.Close(False)
+            excel.Quit()
 
     def resetForm(self):
         self.nameEdit.clear()
