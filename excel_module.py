@@ -2,7 +2,7 @@ import os
 import shutil
 import xlwings as xw
 
-def save_to_excel(filepath, name, gender, age, drugs, date_str):
+def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     # 拷贝Excel模板
@@ -31,6 +31,7 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str):
     print_sheet.range('F13').value = age
 
     print_sheet.range('E15').value = date_str
+    print_sheet.range('A15').value = price  # 更新总计价格
 
     for i in range(4):
         details = ' ;; '.join([f"{drug}" for drug in drugs[i] if drug])
@@ -53,6 +54,8 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str):
     data_sheet.range('C3').value = age
     data_sheet.range('B4').value = '打印日期'
     data_sheet.range('C4').value = date_str
+    data_sheet.range('B5').value = '总计价格'
+    data_sheet.range('C5').value = price
 
     for i in range(4):
         col_start = 2 + i * 3  # 每联开始的列，间隔3列
@@ -71,6 +74,8 @@ def load_from_excel(filepath):
     name = data_sheet.range('C1').value
     gender = data_sheet.range('C2').value
     age = data_sheet.range('C3').value
+    date_str = data_sheet.range('C4').value
+    price = data_sheet.range('C5').value
     drugs = [[] for _ in range(4)]
     for i in range(4):
         col_start = 2 + i * 3  # 每联开始的列，间隔3列
@@ -82,4 +87,4 @@ def load_from_excel(filepath):
             row += 1
     workbook.close()
     app.quit()
-    return name, gender, age, drugs
+    return name, gender, age, drugs, price

@@ -1,12 +1,11 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, \
     QTableWidget, QTableWidgetItem, QGroupBox, QCompleter, QRadioButton, QButtonGroup, QMessageBox
-from PyQt5.QtGui import QFont, QIntValidator
+from PyQt5.QtGui import QFont, QIntValidator, QDoubleValidator
 from PyQt5.QtCore import Qt
 import datetime
 import win32com.client as win32
 from excel_module import save_to_excel, load_from_excel
 from suggestion_module import load_suggestions
-
 
 class InfusionForm(QWidget):
     def __init__(self):
@@ -94,6 +93,19 @@ class InfusionForm(QWidget):
             self.tables.append(table)
         self.layout.addLayout(groupBoxLayout)
 
+        # 总计价格
+        priceLayout = QHBoxLayout()
+        priceLabel = QLabel('总计价格：')
+        priceLabel.setFont(font)
+        self.priceEdit = QLineEdit()
+        self.priceEdit.setFixedHeight(40)
+        self.priceEdit.setFont(font)
+        self.priceEdit.setValidator(QDoubleValidator(0.0, 1000000.0, 3))  # 浮点型输入限制，精确到小数点后两位
+
+        priceLayout.addWidget(priceLabel)
+        priceLayout.addWidget(self.priceEdit)
+        self.layout.addLayout(priceLayout)
+
         # 更多按钮
         moreButton = QPushButton('更多')
         moreButton.setFixedHeight(40)
@@ -171,6 +183,7 @@ class InfusionForm(QWidget):
         name = self.nameEdit.text()
         gender = '男' if self.maleRadio.isChecked() else '女'
         age = self.ageEdit.text()
+        price = self.priceEdit.text()
         drugs = [[] for _ in range(4)]
 
         for i, table in enumerate(self.tables):
@@ -186,7 +199,7 @@ class InfusionForm(QWidget):
 
         timestamp = nowtime.strftime("%Y-%m-%d_%H-%M-%S")
         filepath = f"d:/输液单/{nowtime.strftime('%Y')}/{nowtime.strftime('%m')}/{nowtime.strftime('%d')}/{timestamp}_{name}.xlsx"
-        save_to_excel(filepath, name, gender, age, drugs, date_str)
+        save_to_excel(filepath, name, gender, age, drugs, date_str, price)
 
         # 打印Excel中的“打印页”
         self.print_excel(filepath)
@@ -231,6 +244,7 @@ class InfusionForm(QWidget):
         self.femaleRadio.setChecked(False)
         self.genderGroup.setExclusive(True)
         self.ageEdit.clear()
+        self.priceEdit.clear()
         for table in self.tables:
             table.clearContents()
             for row in range(table.rowCount()):
@@ -239,13 +253,14 @@ class InfusionForm(QWidget):
     def importForm(self):
         filepath, _ = QFileDialog.getOpenFileName(self, "选择Excel文件", "d:/输液单/", "Excel Files (*.xlsx)")
         if filepath:
-            name, gender, age, drugs = load_from_excel(filepath)
+            name, gender, age, drugs, price = load_from_excel(filepath)
             self.nameEdit.setText(name)
             if gender == '男':
                 self.maleRadio.setChecked(True)
             else:
                 self.femaleRadio.setChecked(True)
-            self.ageEdit.setText(age)
+            self.ageEdit.setText(str(age))
+            self.priceEdit.setText(str(price))
             # 将 drugs 分成 4 组填入每个表格
             for i, table in enumerate(self.tables):
                 group_drugs = drugs[i]
