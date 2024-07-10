@@ -62,9 +62,15 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
 
     # 填充药品详情
     for i, drug_list in enumerate(drugs):
-        details = '\n'.join([f'{drug}.\t\tqdivgtt' for drug in drug_list if drug])  # 使用适当的空格替代\t
+        details = '\n'.join([f'{drug}' for drug in drug_list if drug])  # 使用适当的空格替代\t
+        if details:
+            details += "\n" + "qdivgtt"
         cell = f'A{5 + i * 3}'
+
+
         print_sheet[cell] = details
+
+
 
     # 更新数据页
     data_sheet = workbook['数据页']
