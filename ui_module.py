@@ -208,6 +208,11 @@ class InfusionForm(QWidget):
         workbook = excel.Workbooks.Open(filepath)
         sheet = workbook.Sheets('打印页')
         sheet.PageSetup.PaperSize = 11  # A5
+        # 打印边距 0.5cm
+        sheet.PageSetup.LeftMargin = 0.5
+        sheet.PageSetup.RightMargin = 0.5
+        sheet.PageSetup.TopMargin = 0.5
+        sheet.PageSetup.BottomMargin = 0.5
 
         # sheet.PageSetup.Orientation = 2  # 1 - Portrait, 2 - Landscape
         sheet.PrintOut()
