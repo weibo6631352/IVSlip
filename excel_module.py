@@ -3,7 +3,7 @@ import openpyxl
 import shutil
 
 
-def save_to_excel(filepath, name, gender, age, drugs, quantities, date_str):
+def save_to_excel(filepath, name, gender, age, drugs, date_str):
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
     # 拷贝Excel模板
@@ -32,11 +32,8 @@ def save_to_excel(filepath, name, gender, age, drugs, quantities, date_str):
 
     print_sheet['E15'] = date_str
 
-
     for i in range(4):
-        details = ';'.join(
-            [f"{drugs[i][j]}*{quantities[i][j] if quantities[i][j] else '1'}" for j in range(len(drugs[i])) if drugs[i][j]]
-        )
+        details = ' ;; '.join([f"{drug}" for drug in drugs[i] if drug])
         if i == 0:
             print_sheet['A5'] = details
         elif i == 1:
@@ -62,7 +59,6 @@ def save_to_excel(filepath, name, gender, age, drugs, quantities, date_str):
         data_sheet.cell(row=6, column=col_start).value = f'第{i + 1}联'
         for j in range(len(drugs[i])):
             data_sheet.cell(row=7 + j, column=col_start).value = drugs[i][j]
-            data_sheet.cell(row=7 + j, column=col_start + 1).value = quantities[i][j]
 
     workbook.save(filepath)
     workbook.close()
@@ -75,15 +71,12 @@ def load_from_excel(filepath):
     gender = data_sheet.cell(row=2, column=3).value
     age = data_sheet.cell(row=3, column=3).value
     drugs = [[] for _ in range(4)]
-    quantities = [[] for _ in range(4)]
     for i in range(4):
         col_start = 2 + i * 3  # 每联开始的列，间隔3列
         row = 7
         for _ in range(50):
             drug = data_sheet.cell(row=row, column=col_start).value
-            quantity = data_sheet.cell(row=row, column=col_start + 1).value
             if drug:
                 drugs[i].append(drug)
-                quantities[i].append(quantity)
             row += 1
-    return name, gender, age, drugs, quantities
+    return name, gender, age, drugs

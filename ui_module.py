@@ -68,13 +68,11 @@ class InfusionForm(QWidget):
             groupBox = QGroupBox(f'第{i + 1}联')
             groupBox.setFont(font)
             groupBoxInnerLayout = QVBoxLayout()
-            table = QTableWidget(20, 2)  # 初始20行2列
-            table.setHorizontalHeaderLabels(['药品', '数量'])
+            table = QTableWidget(20, 1)  # 初始20行1列
+            table.setHorizontalHeaderLabels(['药品'])
 
-            # 第一列宽度自适应扩展，第二列宽度固定
+            # 第一列宽度自适应扩展
             table.horizontalHeader().setSectionResizeMode(0, 1)
-            table.horizontalHeader().setSectionResizeMode(1, 0)
-            table.setColumnWidth(1, 100)
 
             # 纵向表头不要字体那么明显,新建一种不要加粗的字体，特供纵向表头
             f = table.verticalHeader().font()
@@ -87,11 +85,8 @@ class InfusionForm(QWidget):
             # 行表头隐藏
             table.verticalHeader().hide()
 
-            # 默认数量列为1，内容居中
+            # 内容居中
             for row in range(table.rowCount()):
-                item = QTableWidgetItem('1')
-                item.setTextAlignment(Qt.AlignCenter)
-                table.setItem(row, 1, item)
                 self.set_item_completer(table, row, 0)
 
             table.horizontalHeader().setDefaultAlignment(Qt.AlignCenter)
@@ -168,9 +163,6 @@ class InfusionForm(QWidget):
             currentRowCount = table.rowCount()
             table.setRowCount(currentRowCount + 10)
             for row in range(currentRowCount, currentRowCount + 10):
-                item = QTableWidgetItem('1')
-                item.setTextAlignment(Qt.AlignCenter)
-                table.setItem(row, 1, item)
                 self.set_item_completer(table, row, 0)
 
     def removeRows(self):
@@ -184,22 +176,19 @@ class InfusionForm(QWidget):
         gender = '男' if self.maleRadio.isChecked() else '女'
         age = self.ageEdit.text()
         drugs = [[] for _ in range(4)]
-        quantities = [[] for _ in range(4)]
 
         for i, table in enumerate(self.tables):
             for row in range(table.rowCount()):
                 drugItem = table.cellWidget(row, 0)
-                quantityItem = table.item(row, 1)
-                if drugItem and quantityItem:
+                if drugItem:
                     drugs[i].append(drugItem.text())
-                    quantities[i].append(quantityItem.text())
 
         date_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         # 存储Excel文件
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         filepath = f"d:/输液单/{datetime.datetime.now().strftime('%Y-%m')}/{timestamp}_{name}.xlsx"
-        save_to_excel(filepath, name, gender, age, drugs, quantities, date_str)
+        save_to_excel(filepath, name, gender, age, drugs, date_str)
 
         # 打印Excel中的“打印页”
         self.print_excel(filepath)
@@ -224,38 +213,27 @@ class InfusionForm(QWidget):
         for table in self.tables:
             table.clearContents()
             for row in range(table.rowCount()):
-                item = QTableWidgetItem('1')
-                item.setTextAlignment(Qt.AlignCenter)
-                table.setItem(row, 1, item)
                 self.set_item_completer(table, row, 0)
 
     def importForm(self):
         filepath, _ = QFileDialog.getOpenFileName(self, "选择Excel文件", "d:/输液单/", "Excel Files (*.xlsx)")
         if filepath:
-            name, gender, age, drugs, quantities = load_from_excel(filepath)
+            name, gender, age, drugs = load_from_excel(filepath)
             self.nameEdit.setText(name)
             if gender == '男':
                 self.maleRadio.setChecked(True)
             else:
                 self.femaleRadio.setChecked(True)
             self.ageEdit.setText(age)
-            # 将 drugs 和 quantities 分成 4 组填入每个表格
+            # 将 drugs 分成 4 组填入每个表格
             for i, table in enumerate(self.tables):
                 group_drugs = drugs[i]
-                group_quantities = quantities[i]
                 for row in range(table.rowCount()):
                     if row < len(group_drugs):
                         line_edit = table.cellWidget(row, 0)
                         line_edit.setText(group_drugs[row])
                         line_edit.setAlignment(Qt.AlignCenter)
-                        item = QTableWidgetItem(group_quantities[row])
-                        item.setTextAlignment(Qt.AlignCenter)
-                        table.setItem(row, 1, item)
                     else:
                         line_edit = table.cellWidget(row, 0)
                         line_edit.setText('')
                         line_edit.setAlignment(Qt.AlignCenter)
-                        item = QTableWidgetItem('1')
-                        item.setTextAlignment(Qt.AlignCenter)
-                        table.setItem(row, 1, item)
-
