@@ -65,7 +65,7 @@ class InfusionForm(QWidget):
             groupBox = QGroupBox(f'第{i + 1}联')
             groupBox.setFont(font)
             groupBoxInnerLayout = QVBoxLayout()
-            table = QTableWidget(20, 1)  # 初始20行1列
+            table = QTableWidget(10, 1)  # 初始20行1列
             table.setHorizontalHeaderLabels(['药品'])
 
             # 第一列宽度自适应扩展
@@ -153,7 +153,7 @@ class InfusionForm(QWidget):
 
         self.setLayout(self.layout)
         self.setWindowTitle('史中英诊所输液管理系统')
-        self.resize(1440, 900)
+        self.resize(1440, 720)
         self.show()
 
     def set_item_completer(self, table, row, col):
