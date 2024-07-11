@@ -30,8 +30,8 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
     print_sheet['B13'] = '性别：' + str(gender)
     print_sheet['C13'] = '年龄：' + str(age)
 
-    print_sheet['A15'] = '  日期:' + date_str
-    print_sheet['B15'] = '药费: ￥' + str(price)  # 更新总计价格
+    print_sheet['B15'] = '  日期:' + date_str
+    print_sheet['A15'] = '药费: ￥' + str(price)  # 更新总计价格
 
     # 计算总行高
     total_height = 0
