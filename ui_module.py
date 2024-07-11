@@ -194,11 +194,11 @@ class InfusionForm(QWidget):
                     drugs[i].append(drugItem.text())
 
         nowtime = datetime.datetime.now()
-        date_str = nowtime.strftime("%Y-%m-%d %H:%M:%S")
+        date_str = nowtime.strftime("%Y-%m-%d")
 
         # 存储Excel文件
 
-        timestamp = nowtime.strftime("%Y-%m-%d")
+        timestamp = nowtime.strftime("%Y-%m-%d_%H-%M-%S")
         filepath = f"d:/输液单/{nowtime.strftime('%Y')}/{nowtime.strftime('%m')}/{nowtime.strftime('%d')}/{timestamp}_{name}.xlsx"
         save_to_excel(filepath, name, gender, age, drugs, date_str, price)
 
