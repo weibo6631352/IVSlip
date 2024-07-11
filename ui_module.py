@@ -118,9 +118,16 @@ class InfusionForm(QWidget):
         lessButton.setFont(font)
         lessButton.clicked.connect(self.removeRows)
 
+        # 保存按钮
+        saveButton = QPushButton('仅保存')
+        saveButton.setFixedHeight(40)
+        saveButton.setFont(font)
+        saveButton.clicked.connect(self.saveForm)
+
         moreLessLayout = QHBoxLayout()
         moreLessLayout.addWidget(moreButton)
         moreLessLayout.addWidget(lessButton)
+        moreLessLayout.addWidget(saveButton)
         self.layout.addLayout(moreLessLayout)
 
         # 打印按钮
@@ -128,12 +135,6 @@ class InfusionForm(QWidget):
         printButton.setFixedHeight(40)
         printButton.setFont(font)
         printButton.clicked.connect(self.printForm)
-
-        # 保存按钮
-        saveButton = QPushButton('仅保存')
-        saveButton.setFixedHeight(40)
-        saveButton.setFont(font)
-        saveButton.clicked.connect(self.saveForm)
 
         # 重置按钮
         resetButton = QPushButton('重置')
@@ -150,7 +151,6 @@ class InfusionForm(QWidget):
         # 按钮布局
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(printButton)
-        buttonLayout.addWidget(saveButton)
         buttonLayout.addWidget(resetButton)
         buttonLayout.addWidget(importButton)
 
@@ -216,6 +216,8 @@ class InfusionForm(QWidget):
         if print_out:
             # 打印Excel中的“打印页”
             self.print_excel(filepath)
+        else:
+            QMessageBox.information(self, "保存成功", f"输液单已保存到: {filepath}")
 
     '''
     xl纸10x14    16    10 英寸x 14 英寸
