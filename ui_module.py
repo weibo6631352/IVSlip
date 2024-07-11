@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QVBoxLayout, QHBoxLayout, QFileDialog, \
-    QTableWidget, QTableWidgetItem, QGroupBox, QCompleter, QRadioButton, QButtonGroup, QMessageBox
-from PyQt5.QtGui import QFont, QIntValidator, QDoubleValidator
+    QTableWidget, QGroupBox, QCompleter, QRadioButton, QButtonGroup, QMessageBox
+from PyQt5.QtGui import QFont
 from PyQt5.QtCore import Qt
 import datetime
 import win32com.client as win32
@@ -42,7 +42,6 @@ class InfusionForm(QWidget):
         self.ageEdit = QLineEdit()
         self.ageEdit.setFixedHeight(40)
         self.ageEdit.setFont(font)
-        self.ageEdit.setValidator(QIntValidator(0, 150))
 
         infoLayout.addWidget(nameLabel)
         infoLayout.addWidget(self.nameEdit)
@@ -130,6 +129,12 @@ class InfusionForm(QWidget):
         printButton.setFont(font)
         printButton.clicked.connect(self.printForm)
 
+        # 保存按钮
+        saveButton = QPushButton('仅保存')
+        saveButton.setFixedHeight(40)
+        saveButton.setFont(font)
+        saveButton.clicked.connect(self.saveForm)
+
         # 重置按钮
         resetButton = QPushButton('重置')
         resetButton.setFixedHeight(40)
@@ -145,6 +150,7 @@ class InfusionForm(QWidget):
         # 按钮布局
         buttonLayout = QHBoxLayout()
         buttonLayout.addWidget(printButton)
+        buttonLayout.addWidget(saveButton)
         buttonLayout.addWidget(resetButton)
         buttonLayout.addWidget(importButton)
 
@@ -181,6 +187,12 @@ class InfusionForm(QWidget):
                 table.setRowCount(currentRowCount - 10)
 
     def printForm(self):
+        self.save_and_print(print_out=True)
+
+    def saveForm(self):
+        self.save_and_print(print_out=False)
+
+    def save_and_print(self, print_out):
         name = self.nameEdit.text()
         gender = '男' if self.maleRadio.isChecked() else '女'
         age = self.ageEdit.text()
@@ -197,13 +209,13 @@ class InfusionForm(QWidget):
         date_str = nowtime.strftime("%Y-%m-%d")
 
         # 存储Excel文件
-
         timestamp = nowtime.strftime("%Y-%m-%d_%H-%M-%S")
         filepath = f"d:/输液单/{nowtime.strftime('%Y')}/{nowtime.strftime('%m')}/{nowtime.strftime('%d')}/{timestamp}_{name}.xlsx"
         save_to_excel(filepath, name, gender, age, drugs, date_str, price)
 
-        # 打印Excel中的“打印页”
-        self.print_excel(filepath)
+        if print_out:
+            # 打印Excel中的“打印页”
+            self.print_excel(filepath)
 
     '''
     xl纸10x14    16    10 英寸x 14 英寸
