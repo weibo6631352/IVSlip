@@ -198,7 +198,7 @@ class InfusionForm(QWidget):
 
         # 存储Excel文件
 
-        timestamp = nowtime.strftime("%Y-%m-%d_%H-%M-%S")
+        timestamp = nowtime.strftime("%Y-%m-%d")
         filepath = f"d:/输液单/{nowtime.strftime('%Y')}/{nowtime.strftime('%m')}/{nowtime.strftime('%d')}/{timestamp}_{name}.xlsx"
         save_to_excel(filepath, name, gender, age, drugs, date_str, price)
 
