@@ -14,24 +14,24 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
 
     # 更新打印页
     print_sheet = workbook['打印页']
-    print_sheet['B4'] = name
-    print_sheet['D4'] = gender
-    print_sheet['F4'] = age
+    print_sheet['A4'] = '  1# 姓名：' + name
+    print_sheet['B4'] = '性别：' + str(gender)
+    print_sheet['C4'] = '年龄：' + str(age)
 
-    print_sheet['B7'] = name
-    print_sheet['D7'] = gender
-    print_sheet['F7'] = age
+    print_sheet['A7'] = '  2# 姓名：' + name
+    print_sheet['B7'] = '性别：' + str(gender)
+    print_sheet['C7'] = '年龄：' + str(age)
 
-    print_sheet['B10'] = name
-    print_sheet['D10'] = gender
-    print_sheet['F10'] = age
+    print_sheet['A10'] = '  3# 姓名：' + name
+    print_sheet['B10'] = '性别：' + str(gender)
+    print_sheet['C10'] = '年龄：' + str(age)
 
-    print_sheet['B13'] = name
-    print_sheet['D13'] = gender
-    print_sheet['F13'] = age
+    print_sheet['A13'] = '  4# 姓名：' + name
+    print_sheet['B13'] = '性别：' + str(gender)
+    print_sheet['C13'] = '年龄：' + str(age)
 
-    print_sheet['E15'] = date_str
-    print_sheet['B15'] = price  # 更新总计价格
+    print_sheet['C15'] = date_str
+    print_sheet['A15'] = '  药费: ￥' + str(price)  # 更新总计价格
 
     # 计算总行高
     total_height = 0
@@ -48,7 +48,7 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
         # 过滤掉空字符串，计算药品数量
         valid_drug_count = len([drug for drug in drug_list if drug])
         # 确保药品数量至少为1
-        drug_count = valid_drug_count == 0 and 1 or valid_drug_count * 2
+        drug_count = valid_drug_count + 1
         # 将计算结果添加到药品数量列表中
         drug_counts.append(drug_count)
 
