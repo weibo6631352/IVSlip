@@ -102,7 +102,6 @@ class InfusionForm(QWidget):
         self.priceEdit = QLineEdit()
         self.priceEdit.setFixedHeight(40)
         self.priceEdit.setFont(font)
-        self.priceEdit.setValidator(QDoubleValidator(0.0, 1000000.0, 3))  # 浮点型输入限制，精确到小数点后两位
 
         priceLayout.addWidget(priceLabel)
         priceLayout.addWidget(self.priceEdit)
