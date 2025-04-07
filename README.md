@@ -6,16 +6,15 @@
 
 两种启动方式：
 
-1. 双击 `run.bat` - 直接启动应用程序
-2. 双击 `start.bat` - 显示主菜单，可以选择不同的操作
+1. 双击 `start.bat` - 显示主菜单，可以选择不同的操作
+2. 命令行：`start.bat run` - 直接启动应用程序，不显示菜单
 
 ## 项目结构
 
 ```
 .
 ├── README.md                  # 项目说明文档
-├── run.bat                    # 快速启动批处理文件
-├── start.bat                  # 主菜单批处理文件
+├── start.bat                  # 启动批处理文件
 ├── requirements.txt           # 依赖列表
 │
 ├── ivmanager/                 # 主包目录
@@ -45,6 +44,12 @@
 ## 安装
 
 ```bash
+start.bat
+```
+
+然后选择 "安装依赖" 选项，或者直接运行：
+
+```bash
 pip install -r requirements.txt
 ```
 
@@ -53,10 +58,16 @@ pip install -r requirements.txt
 开发环境下运行:
 
 ```bash
-python ivmanager/run.py
+start.bat run
 ```
 
-或者直接双击 `run.bat`
+或者通过菜单运行：
+
+```bash
+start.bat
+```
+
+然后选择 "启动应用程序" 选项
 
 ## 构建可执行文件
 

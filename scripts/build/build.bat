@@ -1,5 +1,7 @@
 @echo off
+rem 设置UTF-8编码
 chcp 65001 >nul
+
 echo ======================================
 echo         构建输液单管理系统
 echo ======================================
@@ -15,10 +17,10 @@ taskkill /f /im 输液单管理系统.exe 2>nul
 if exist "%APPDATA%\IVManagementSystem\app.lock" del /f /q "%APPDATA%\IVManagementSystem\app.lock" 2>nul
 
 echo 第二步: 安装依赖...
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 
 echo 第三步: 安装PyInstaller...
-pip install PyInstaller
+python -m pip install PyInstaller
 
 echo 第四步: 复制资源文件...
 REM 确保资源目录存在
@@ -36,8 +38,18 @@ REM 清理之前的构建
 if exist "build" rd /s /q "build" 2>nul
 if exist "dist\输液单管理系统.exe" del /f "dist\输液单管理系统.exe" 2>nul
 
-REM 使用spec文件构建
-PyInstaller scripts\build\ivmanager.spec
+REM 直接使用PyInstaller命令行参数构建，不使用spec文件
+python -m PyInstaller --name="输液单管理系统" ^
+  --windowed ^
+  --icon="ivmanager\resources\assets\icon.png" ^
+  --add-data="ivmanager\resources\assets\icon.png;ivmanager\resources\assets" ^
+  --add-data="ivmanager\resources\templates\输液单.xlsx;ivmanager\resources\templates" ^
+  --add-data="ivmanager\resources\config\suggestions.json;ivmanager\resources\config" ^
+  --hidden-import=win32gui ^
+  --hidden-import=win32con ^
+  --hidden-import=win32process ^
+  --hidden-import=psutil ^
+  "ivmanager\run.py"
 
 echo 第六步: 创建启动器...
 REM 创建启动批处理文件
