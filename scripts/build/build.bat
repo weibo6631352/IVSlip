@@ -18,7 +18,7 @@ if exist "%APPDATA%\IVManagementSystem\app.lock" del /f /q "%APPDATA%\IVManageme
 REM 安装依赖
 echo 2. 安装依赖...
 python -m pip install -r requirements.txt
-python -m pip install PyInstaller
+python -m pip install pyinstaller
 
 REM 准备资源目录
 echo 3. 检查资源...
@@ -33,31 +33,16 @@ if exist "build" rd /s /q "build" 2>nul
 if exist "dist" rd /s /q "dist" 2>nul
 
 REM 直接使用PyInstaller命令行参数构建
-python -m PyInstaller --name="输液单管理系统" ^
-  --windowed ^
-  --icon="ivmanager\resources\assets\icon.png" ^
-  --add-data="ivmanager\resources\assets\icon.png;ivmanager\resources\assets" ^
-  --add-data="ivmanager\resources\templates\输液单.xlsx;ivmanager\resources\templates" ^
-  --add-data="ivmanager\resources\config\suggestions.json;ivmanager\resources\config" ^
-  --hidden-import=win32gui ^
-  --hidden-import=win32con ^
-  --hidden-import=win32process ^
-  --hidden-import=psutil ^
-  "ivmanager\run.py"
+echo python -m PyInstaller --name="输液单管理系统" --windowed --icon="ivmanager\resources\assets\icon.png" --add-data="ivmanager\resources\assets\icon.png;ivmanager\resources\assets" --add-data="ivmanager\resources\templates\输液单.xlsx;ivmanager\resources\templates" --add-data="ivmanager\resources\config\suggestions.json;ivmanager\resources\config" --hidden-import=win32gui --hidden-import=win32con --hidden-import=win32process --hidden-import=psutil "ivmanager\run.py"
+python -m PyInstaller --name="输液单管理系统" --windowed --icon="ivmanager\resources\assets\icon.png" --add-data="ivmanager\resources\assets\icon.png;ivmanager\resources\assets" --add-data="ivmanager\resources\templates\输液单.xlsx;ivmanager\resources\templates" --add-data="ivmanager\resources\config\suggestions.json;ivmanager\resources\config" --hidden-import=win32gui --hidden-import=win32con --hidden-import=win32process --hidden-import=psutil "ivmanager\run.py"
 
 REM 创建启动批处理文件
 echo 5. 创建启动器...
-(
-echo @echo off
-echo chcp 65001 ^>nul
-echo cd /d %%~dp0
-echo start 输液单管理系统.exe
-echo exit
-) > "dist\temp.bat"
-
-REM 使用PowerShell转换编码并替换文件
-powershell -Command "Get-Content 'dist\temp.bat' | Set-Content -Encoding UTF8 'dist\启动输液管理系统.bat'"
-del "dist\temp.bat" 2>nul
+echo @echo off > "dist\启动输液管理系统.bat"
+echo chcp 65001 ^>nul >> "dist\启动输液管理系统.bat"
+echo cd /d %%~dp0 >> "dist\启动输液管理系统.bat"
+echo start 输液单管理系统.exe >> "dist\启动输液管理系统.bat"
+echo exit >> "dist\启动输液管理系统.bat"
 
 popd
 

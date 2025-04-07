@@ -33,7 +33,7 @@ if errorlevel 1 goto START_APP
 echo.
 echo 正在启动输液单管理系统...
 echo.
-python ivmanager/run.py
+python ivmanager\run.py
 exit /b
 
 :START_APP
@@ -41,7 +41,7 @@ cls
 echo.
 echo 正在启动应用程序...
 echo.
-python ivmanager/run.py
+python ivmanager\run.py
 echo.
 echo 按任意键返回菜单...
 pause >nul
