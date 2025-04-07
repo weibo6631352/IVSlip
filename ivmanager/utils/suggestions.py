@@ -4,7 +4,7 @@
 
 import json
 import os
-from ivmanager.core.app import get_resource_path
+from ivmanager.utils.resource import get_resource_path
 
 
 def load_suggestions():

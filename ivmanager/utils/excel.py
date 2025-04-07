@@ -4,7 +4,7 @@ Excel文件处理模块
 import os
 import shutil
 import openpyxl
-from ivmanager.core.app import get_resource_path
+from ivmanager.utils.resource import get_resource_path
 
 
 def save_to_excel(filepath, name, gender, age, drugs, date_str, price):

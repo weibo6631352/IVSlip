@@ -1,5 +1,5 @@
 @echo off
-rem 设置UTF-8编码，确保正确显示中文
+rem 设置UTF-8编码
 chcp 65001 >nul
 title 输液单管理系统
 
@@ -18,8 +18,7 @@ echo  3. 构建应用
 echo  4. 退出
 echo.
 echo ========================================
-echo  提示: 在PowerShell中请使用 .\start.bat 或 .\start.bat run
-echo  在命令提示符中使用 start.bat 或 start.bat run
+echo  提示: 直接运行 start.bat run 启动应用
 echo ========================================
 echo.
 
@@ -64,7 +63,7 @@ cls
 echo.
 echo 构建应用程序...
 echo.
-call .\scripts\build\build.bat
+call scripts\build\build.bat
 echo.
 echo 按任意键返回菜单...
 pause >nul
