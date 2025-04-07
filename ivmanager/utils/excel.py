@@ -1,13 +1,29 @@
+"""
+Excel文件处理模块
+"""
 import os
-import openpyxl
 import shutil
+import openpyxl
+from ivmanager.core.app import get_resource_path
 
 
 def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
+    """
+    保存表单数据到Excel文件
+    
+    Args:
+        filepath: 保存文件路径
+        name: 患者姓名
+        gender: 性别
+        age: 年龄
+        drugs: 药品列表
+        date_str: 日期字符串
+        price: 价格
+    """
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
-    # 拷贝Excel模板
-    template_path = './输液单.xlsx'
+    # 获取模板路径
+    template_path = get_resource_path('resources/templates/输液单.xlsx')
     shutil.copy(template_path, filepath)
 
     workbook = openpyxl.load_workbook(filepath)
@@ -39,7 +55,8 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
         if print_sheet.row_dimensions[row].height is not None:
             total_height += print_sheet.row_dimensions[row].height
         else:
-            total_height += 15  # 默认行高为15
+            total_height += 15  # 默认行高
+
     # 初始化药品数量列表
     drug_counts = []
 
@@ -62,15 +79,11 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
 
     # 填充药品详情
     for i, drug_list in enumerate(drugs):
-        details = '\n'.join([f'{drug}' for drug in drug_list if drug])  # 使用适当的空格替代\t
+        details = '\n'.join([f'{drug}' for drug in drug_list if drug])
         if details:
             details += "\n" + "qdivgtt"
         cell = f'A{5 + i * 3}'
-
-
         print_sheet[cell] = details
-
-
 
     # 更新数据页
     data_sheet = workbook['数据页']
@@ -94,14 +107,24 @@ def save_to_excel(filepath, name, gender, age, drugs, date_str, price):
     workbook.save(filepath)
     workbook.close()
 
+
 def load_from_excel(filepath):
+    """
+    从Excel文件加载数据
+    
+    Args:
+        filepath: Excel文件路径
+        
+    Returns:
+        (姓名, 性别, 年龄, 药品列表, 价格)元组
+    """
     workbook = openpyxl.load_workbook(filepath)
     data_sheet = workbook['数据页']
     name = data_sheet.cell(row=1, column=3).value
     gender = data_sheet.cell(row=2, column=3).value
     age = data_sheet.cell(row=3, column=3).value
-    date_str = data_sheet.cell(row=4, column=3).value
     price = data_sheet.cell(row=5, column=3).value
+    
     drugs = [[] for _ in range(4)]
     for i in range(4):
         col_start = 2 + i * 3  # 每联开始的列，间隔3列
@@ -111,4 +134,6 @@ def load_from_excel(filepath):
             if drug:
                 drugs[i].append(drug)
             row += 1
-    return name, gender, age, drugs, price
+    
+    workbook.close()
+    return name, gender, age, drugs, price 
